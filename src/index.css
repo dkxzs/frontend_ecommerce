@@ -1,3 +1,18 @@
+@import url("https://fonts.googleapis.com/css2?family=Redressed&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+  overflow: overlay;
+}

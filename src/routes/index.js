@@ -10,7 +10,7 @@ export const routes = [
     isShowHeaderFooter: true,
   },
   {
-    path: "/product",
+    path: "/products",
     page: ProductPage,
     isShowHeaderFooter: true,
   },

@@ -6,7 +6,7 @@ import DefaultLayout from "./components/Layout/DefaultLayout.jsx";
 
 function App() {
   return (
-    <div className="w-full">
+    <>
       <Router>
         <Routes>
           <Route element={<DefaultLayout />}>
@@ -17,7 +17,7 @@ function App() {
           </Route>
         </Routes>
       </Router>
-    </div>
+    </>
   );
 }
 
