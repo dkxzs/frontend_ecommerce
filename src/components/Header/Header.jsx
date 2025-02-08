@@ -3,25 +3,8 @@ import { FiShoppingCart, FiSearch, FiLogOut } from "react-icons/fi";
 import { FaRegUserCircle, FaRegHeart } from "react-icons/fa";
 import Container from "../Container/Container";
 import "./Header.scss";
-
-const menuList = [
-  {
-    name: "Home",
-    path: "/",
-  },
-  {
-    name: "Products",
-    path: "/products",
-  },
-  {
-    name: "About",
-    path: "/about",
-  },
-  {
-    name: "Contact",
-    path: "/contact",
-  },
-];
+import NavBar from "../NavBar/NavBar";
+import Button from "../Button/Button";
 
 const Header = () => {
   let isLogin = false;
@@ -48,17 +31,7 @@ const Header = () => {
             S - Store
           </Link>
 
-          <nav className="hidden md:flex items-center space-x-8">
-            {menuList.map((menu, index) => (
-              <NavLink
-                key={index}
-                to={menu.path}
-                className="text-2xl font-semibold hover:text-gray-600"
-              >
-                {menu.name}
-              </NavLink>
-            ))}
-          </nav>
+          <NavBar />
 
           <div className="flex items-center justify-center space-x-2">
             <Link to="/search">
@@ -93,11 +66,11 @@ const Header = () => {
               </>
             ) : (
               <>
-                <Link to="/login">
-                  <button className="px-5 py-2 bg-blue-600 font-semibold text-white rounded-full text-2xl">
-                    Login
-                  </button>
-                </Link>
+                <Button
+                  text="Login"
+                  path="/login"
+                  className="px-5 py-2 bg-blue-600 font-semibold text-white rounded-full text-2xl"
+                />
               </>
             )}
           </div>
