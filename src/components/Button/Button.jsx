@@ -1,11 +1,11 @@
-import { Link } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 const Button = (props) => {
+  const navigate = useNavigate();
   const { text, className, path } = props;
   return (
-    <Link to={path}>
-      <button className={className}>{text}</button>
-    </Link>
+    <button className={className} onClick={() => navigate(path)}>
+      {text}
+    </button>
   );
 };
 
