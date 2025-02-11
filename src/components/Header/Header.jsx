@@ -8,7 +8,7 @@ import Button from "../Button/Button";
 import { Dropdown } from "flowbite-react";
 
 const Header = () => {
-  let isLogin = true;
+  let isLogin = false;
 
   return (
     <header className="border-b sticky top-0 bg-white z-10">
@@ -70,7 +70,7 @@ const Header = () => {
                   <Dropdown.Divider />
                   <Dropdown.Item
                     as={Link}
-                    to="/login"
+                    to="/sign-in"
                     className="text-xl px-7 py-2"
                   >
                     Log out
@@ -81,8 +81,8 @@ const Header = () => {
               <>
                 <Button
                   text="Login"
-                  path="/login"
-                  className="px-5 py-2 bg-blue-600 font-semibold text-white rounded-full text-2xl"
+                  path="/sign-in"
+                  className="px-7 py-3 bg-blue-600 font-semibold text-white rounded-full text-2xl"
                 />
               </>
             )}
