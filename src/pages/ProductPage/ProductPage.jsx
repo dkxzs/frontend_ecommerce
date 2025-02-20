@@ -11,7 +11,7 @@ const ProductPage = () => {
         <div className="mt-3 flex items-center ">
           <p className="text-3xl">Sort by</p>
           <div className="">
-            <select className=" p-2 mt-1 ml-3 border border-gray-300 outline-none rounded">
+            <select className=" p-2 mt-1 ml-3 border border-gray-300 outline-none rounded focus:ring-0 focus:outline-none">
               <option value="all">All</option>
               <option value="price">Price Low to High</option>
               <option value="price">Price High to Low</option>

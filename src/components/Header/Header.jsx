@@ -80,7 +80,7 @@ const Header = () => {
             ) : (
               <>
                 <Button
-                  text="Login"
+                  text="Đăng nhập"
                   path="/sign-in"
                   className="px-7 py-3 bg-blue-600 font-semibold text-white rounded-full text-2xl"
                 />

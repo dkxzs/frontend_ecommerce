@@ -2,19 +2,19 @@ import { NavLink } from "react-router-dom";
 
 const menuList = [
   {
-    name: "Home",
+    name: "Trang chủ",
     path: "/",
   },
   {
-    name: "Products",
+    name: "Sản phẩm",
     path: "/products",
   },
   {
-    name: "About",
+    name: "Về chúng tôi",
     path: "/about",
   },
   {
-    name: "Contact",
+    name: "Liên hệ",
     path: "/contact",
   },
 ];
