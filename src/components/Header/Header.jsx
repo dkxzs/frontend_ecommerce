@@ -1,4 +1,4 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { FiShoppingCart, FiSearch } from "react-icons/fi";
 import { FaRegUserCircle, FaRegHeart } from "react-icons/fa";
 import Container from "../Container/Container";
@@ -6,9 +6,12 @@ import "./Header.scss";
 import NavBar from "../NavBar/NavBar";
 import Button from "../Button/Button";
 import { Dropdown } from "flowbite-react";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../../redux/slices/userSlice";
 
 const Header = () => {
-  let isLogin = false;
+  let isLogin = useSelector((state) => state.user.isAuth);
+  const dispatch = useDispatch();
 
   return (
     <header className="border-b sticky top-0 bg-white z-10">
@@ -58,22 +61,26 @@ const Header = () => {
                     to="/profile"
                     className="text-xl px-7 py-2"
                   >
-                    Profile
+                    Thông tin cá nhân
                   </Dropdown.Item>
                   <Dropdown.Item
                     as={Link}
                     to="/orders"
                     className="text-xl px-7 py-2"
                   >
-                    Orders
+                    Đơn hàng
                   </Dropdown.Item>
                   <Dropdown.Divider />
                   <Dropdown.Item
                     as={Link}
                     to="/sign-in"
                     className="text-xl px-7 py-2"
+                    onClick={() => {
+                      dispatch(logout());
+                      // localStorage.removeItem("user");
+                    }}
                   >
-                    Log out
+                    Đăng xuất
                   </Dropdown.Item>
                 </Dropdown>
               </>

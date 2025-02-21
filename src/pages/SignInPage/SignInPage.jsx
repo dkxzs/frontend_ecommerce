@@ -2,8 +2,11 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
-import { loginUser } from "../../services/userServices";
+import { loginUser, getDetailUser } from "../../services/userServices";
 import { useMutationHook } from "../../hooks/useMutationHook";
+import { jwtDecode } from "jwt-decode";
+import { useDispatch } from "react-redux";
+import { login } from "../../redux/slices/userSlice";
 
 const SignInPage = () => {
   const [formData, setFormData] = useState({
@@ -15,6 +18,7 @@ const SignInPage = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+  const dispatch = useDispatch();
 
   const mutation = useMutationHook(
     ({ email, password }) => loginUser(email, password),
@@ -23,6 +27,17 @@ const SignInPage = () => {
         if (data.EC === 0) {
           toast.success("Đăng nhập thành công!");
           navigate("/");
+          localStorage.setItem("access_token", data?.DT?.access_token);
+          console.log("check data: ", data);
+          dispatch(login(data));
+          if (data?.DT?.access_token) {
+            const decoded = jwtDecode(data.DT.access_token);
+            console.log("decoded: ", decoded);
+            if (decoded?.id) {
+              handleGetDetailUser(decoded.id);
+            }
+            // localStorage.setItem("user", JSON.stringify(decoded));
+          }
         } else if (data.EC !== 0) {
           toast.error(data.EM || "Đăng nhập thất bại!");
         }
@@ -35,6 +50,11 @@ const SignInPage = () => {
       },
     }
   );
+
+  const handleGetDetailUser = async (id) => {
+    const res = await getDetailUser(id);
+    console.log("get detail user: ", res);
+  };
 
   const handleChange = (e) => {
     let { id, value } = e.target;

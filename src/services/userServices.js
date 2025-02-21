@@ -9,4 +9,9 @@ const registerUser = async (name, email, password) => {
   return res.data;
 };
 
-export { loginUser, registerUser };
+const getDetailUser = async (id) => {
+  const res = await axios.get(`/user/get-detail-user/${id}`);
+  return res.data;
+};
+
+export { loginUser, registerUser, getDetailUser };
