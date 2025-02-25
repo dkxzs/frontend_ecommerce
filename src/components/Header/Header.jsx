@@ -8,6 +8,8 @@ import Button from "../Button/Button";
 import { Dropdown } from "flowbite-react";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../redux/slices/userSlice";
+import { toast } from "react-toastify";
+import { logoutUser } from "../../services/userServices";
 
 const Header = () => {
   let isLogin = useSelector((state) => state.user.isAuth);
@@ -75,9 +77,13 @@ const Header = () => {
                     as={Link}
                     to="/sign-in"
                     className="text-xl px-7 py-2"
-                    onClick={() => {
+                    onClick={async () => {
                       dispatch(logout());
-                      // localStorage.removeItem("user");
+                      localStorage.removeItem("access_token");
+                      let data = await logoutUser();
+                      if (data) {
+                        toast.success(data.EM);
+                      }
                     }}
                   >
                     Đăng xuất

@@ -5,6 +5,7 @@ import OrderPage from "../pages/OrderPage/OrderPage";
 import ProductPage from "../pages/ProductPage/ProductPage";
 import SignUpPage from "../pages/SignUpPage/SignUpPage";
 import ProductDetailPage from "../pages/ProductDetailPage/ProductDetailPage";
+import ProfilePage from "../pages/ProfilePage/ProfilePage";
 
 export const routes = [
   {
@@ -25,6 +26,11 @@ export const routes = [
   {
     path: "/order",
     page: OrderPage,
+    isShowHeaderFooter: true,
+  },
+  {
+    path: "/profile",
+    page: ProfilePage,
     isShowHeaderFooter: true,
   },
   {

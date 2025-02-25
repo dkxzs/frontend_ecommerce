@@ -1,9 +1,18 @@
+import { useEffect } from "react";
 import Brands from "../../components/Brands/Brands";
 import Button from "../../components/Button/Button";
 import ProductCart from "../../components/ProductCart/ProductCart";
 import Slider from "../../components/Slider/Slider";
+import { getDetailUser } from "../../services/userServices";
 
 const HomePage = () => {
+  useEffect(() => {
+    fetchUser();
+  }, []);
+  const fetchUser = async () => {
+    let resuser = await getDetailUser("67b6312d442f0c67a94d15c8");
+    console.log("resuser", resuser);
+  };
   return (
     <>
       <Slider />

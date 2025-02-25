@@ -15,11 +15,14 @@ export const userSlice = createSlice({
   reducers: {
     login: (state, action) => {
       state.account = {
-        name: action.payload.DT.user.name,
-        email: action.payload.DT.user.email,
-        access_token: action.payload.DT.access_token,
+        name: action.payload?.DT?.user?.name,
+        email: action.payload?.DT?.user?.email,
+        access_token: action.payload?.DT?.access_token,
       };
       state.isAuth = true;
+    },
+    updateAccessToken: (state, action) => {
+      state.account.access_token = action.payload?.DT?.access_token;
     },
     logout: (state) => {
       state.account = initialState.account;
@@ -28,6 +31,6 @@ export const userSlice = createSlice({
   },
 });
 
-export const { login, logout } = userSlice.actions;
+export const { login, logout, updateAccessToken } = userSlice.actions;
 
 export default userSlice.reducer;
