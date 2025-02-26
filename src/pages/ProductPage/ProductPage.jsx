@@ -1,8 +1,21 @@
+import { useQuery } from "@tanstack/react-query";
 import Banner from "../../components/Banner/Banner";
 import Category from "../../components/Category/Category";
 import ProductCart from "../../components/ProductCart/ProductCart";
+import { getAllProduct } from "../../services/productServices";
 
 const ProductPage = () => {
+  const fetchAllProducts = async () => {
+    const res = await getAllProduct();
+    return res.DT;
+  };
+
+  const { data: res } = useQuery({
+    queryKey: ["products"],
+    queryFn: fetchAllProducts,
+  });
+  console.log("check data: ", res);
+
   return (
     <>
       <Category />
@@ -19,13 +32,10 @@ const ProductPage = () => {
           </div>
         </div>
         <div className=" grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 mt-2 gap-6 mx-auto py-8">
-          <ProductCart />
-          <ProductCart />
-          <ProductCart />
-          <ProductCart />
-          <ProductCart />
-          <ProductCart />
-          <ProductCart />
+          {res &&
+            res.data.map((product) => (
+              <ProductCart key={product._id} product={product} />
+            ))}
         </div>
       </div>
     </>

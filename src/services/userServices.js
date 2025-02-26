@@ -33,4 +33,16 @@ const logoutUser = async () => {
   return res.data;
 };
 
-export { loginUser, registerUser, getDetailUser, refreshToken, logoutUser };
+const updateUser = async (id, data) => {
+  const res = await axios.put(`/user/update-user/${id}`, data);
+  return res.data;
+};
+
+export {
+  loginUser,
+  registerUser,
+  getDetailUser,
+  refreshToken,
+  logoutUser,
+  updateUser,
+};

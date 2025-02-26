@@ -5,7 +5,8 @@ import Button from "../Button/Button";
 import img from "../../assets/images/iphone16.jpg";
 import { Link } from "react-router-dom";
 
-const ProductCart = () => {
+const ProductCart = (props) => {
+  const { product } = props;
   const [isWishlisted, setIsWishlisted] = useState(false);
 
   return (
@@ -24,7 +25,7 @@ const ProductCart = () => {
           {isWishlisted ? (
             <FaHeart className="size-7 text-red-500" />
           ) : (
-            <FaRegHeart className="size-7 text-red-500"/>
+            <FaRegHeart className="size-7 text-red-500" />
           )}
         </button>
       </div>
@@ -32,22 +33,26 @@ const ProductCart = () => {
       <div className="p-4 space-y-3">
         <Link to="/product-detail">
           <h3 className="font-medium text-2xl cursor-pointer line-clamp-2">
-            Women's Classic Pullover Hoodie - Cozy & Chic
+            {product.name}
           </h3>
         </Link>
 
         <div className="flex items-baseline gap-2">
-          <span className="text-xl font-bold text-green-600">900 $</span>
-          <span className="text-xl text-gray-500 line-through">1100$</span>
+          <span className="text-xl font-bold text-green-600">
+            {product.price} vnd
+          </span>
+          <span className="text-xl text-gray-500 ">-5%</span>
         </div>
 
         <p className="text-md text-ellipsis overflow-hidden line-clamp-2 text-gray-600">
-          Elevate your casual style with our Women's Classic Pullover...
+          {product.shortDescription}
         </p>
 
         <div className="flex items-center gap-1">
           <FaStar className="w-5 h-5 text-yellow-300" />
-          <span className="text-lg text-gray-600 ml-1">4.3 (11)</span>
+          <span className="text-lg text-gray-600 ml-1">
+            {product.rating} | Đã bán {product.selled || 0}
+          </span>
         </div>
 
         <div className="flex items-center gap-2 pt-2">

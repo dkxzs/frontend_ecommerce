@@ -13,6 +13,7 @@ import { logoutUser } from "../../services/userServices";
 
 const Header = () => {
   let isLogin = useSelector((state) => state.user.isAuth);
+  let account = useSelector((state) => state.user.account);
   const dispatch = useDispatch();
 
   return (
@@ -51,9 +52,17 @@ const Header = () => {
                 <Dropdown
                   size="lg"
                   label={
-                    <div className="p-3 hover:bg-gray-100 rounded-full">
-                      <FaRegUserCircle className="size-6 cursor-pointer" />
-                    </div>
+                    account?.avatar ? (
+                      <img
+                        src={account.avatar}
+                        alt="avatar"
+                        className="w-10 h-10 object-cover object-center rounded-full"
+                      />
+                    ) : (
+                      <div className="p-3 hover:bg-gray-100 rounded-full">
+                        <FaRegUserCircle className="size-6 cursor-pointer" />
+                      </div>
+                    )
                   }
                   inline
                   arrowIcon={false}

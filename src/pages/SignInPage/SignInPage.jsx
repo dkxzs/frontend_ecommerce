@@ -6,7 +6,7 @@ import { loginUser, getDetailUser } from "../../services/userServices";
 import { useMutationHook } from "../../hooks/useMutationHook";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch } from "react-redux";
-import { login } from "../../redux/slices/userSlice";
+import { login, updateAccessToken } from "../../redux/slices/userSlice";
 
 const SignInPage = () => {
   const [formData, setFormData] = useState({
@@ -28,7 +28,7 @@ const SignInPage = () => {
           toast.success("Đăng nhập thành công!");
           navigate("/");
           localStorage.setItem("access_token", data?.DT?.access_token);
-          dispatch(login(data));
+          dispatch(updateAccessToken(data)); 
           if (data?.DT?.access_token) {
             const decoded = jwtDecode(data.DT.access_token);
             if (decoded?.id) {
@@ -51,6 +51,8 @@ const SignInPage = () => {
 
   const handleGetDetailUser = async (id) => {
     const res = await getDetailUser(id);
+    dispatch(login(res));
+    console.log("check res: ", res);
   };
 
   const handleChange = (e) => {

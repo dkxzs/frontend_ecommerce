@@ -13,8 +13,10 @@ const queryClient = new QueryClient();
 createRoot(document.getElementById("root")).render(
   // <StrictMode>
   <QueryClientProvider client={queryClient}>
-    <Provider store={store} persistor={persistor}>
-      <App />
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <App />
+      </PersistGate>
     </Provider>
     <ReactQueryDevtools initialIsOpen={false} />
   </QueryClientProvider>

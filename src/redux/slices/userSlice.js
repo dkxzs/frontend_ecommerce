@@ -2,8 +2,12 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   account: {
+    id: "",
     name: "",
     email: "",
+    phone: "",
+    address: "",
+    avatar: "",
     access_token: "",
   },
   isAuth: false,
@@ -15,9 +19,13 @@ export const userSlice = createSlice({
   reducers: {
     login: (state, action) => {
       state.account = {
-        name: action.payload?.DT?.user?.name,
-        email: action.payload?.DT?.user?.email,
-        access_token: action.payload?.DT?.access_token,
+        ...state.account,
+        id: action.payload?.DT?._id || "",
+        name: action.payload?.DT?.name || "",
+        email: action.payload?.DT?.email || "",
+        phone: action.payload?.DT?.phone || "",
+        address: action.payload?.DT?.address || "",
+        avatar: action.payload?.DT?.avatar || "",
       };
       state.isAuth = true;
     },
