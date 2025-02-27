@@ -45,10 +45,15 @@ export const routes = [
     isShowHeaderFooter: false,
   },
   {
-    path: "/admin",
+    path: "/system/admin",
     page: AdminPage,
     isShowHeaderFooter: false,
     isPrivate: true,
+    requiredRole: true,
+  },
+  {
+    path: "/not-found",
+    page: NotFoundPage,
   },
   {
     path: "*",

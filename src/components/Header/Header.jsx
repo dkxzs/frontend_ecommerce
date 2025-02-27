@@ -67,20 +67,33 @@ const Header = () => {
                   inline
                   arrowIcon={false}
                 >
-                  <Dropdown.Item
-                    as={Link}
-                    to="/profile"
-                    className="text-xl px-7 py-2"
-                  >
-                    Thông tin cá nhân
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    as={Link}
-                    to="/orders"
-                    className="text-xl px-7 py-2"
-                  >
-                    Đơn hàng
-                  </Dropdown.Item>
+                  {account.isAdmin ? (
+                    <Dropdown.Item
+                      as={Link}
+                      to="/system/admin"
+                      className="text-xl px-7 py-2"
+                    >
+                      Quản trị
+                    </Dropdown.Item>
+                  ) : (
+                    <>
+                      <Dropdown.Item
+                        as={Link}
+                        to="/profile"
+                        className="text-xl px-7 py-2"
+                      >
+                        Thông tin cá nhân
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        as={Link}
+                        to="/orders"
+                        className="text-xl px-7 py-2"
+                      >
+                        Đơn hàng
+                      </Dropdown.Item>
+                    </>
+                  )}
+
                   <Dropdown.Divider />
                   <Dropdown.Item
                     as={Link}

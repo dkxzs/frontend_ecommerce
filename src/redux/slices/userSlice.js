@@ -9,6 +9,7 @@ const initialState = {
     address: "",
     avatar: "",
     access_token: "",
+    isAdmin: false,
   },
   isAuth: false,
 };
@@ -26,6 +27,7 @@ export const userSlice = createSlice({
         phone: action.payload?.DT?.phone || "",
         address: action.payload?.DT?.address || "",
         avatar: action.payload?.DT?.avatar || "",
+        isAdmin: action.payload?.DT?.isAdmin,
       };
       state.isAuth = true;
     },

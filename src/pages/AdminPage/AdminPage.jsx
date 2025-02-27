@@ -1,7 +1,15 @@
+import Header from "../../components/Admin/Header/Header";
+import SideBar from "../../components/Admin/SideBar/SideBar";
+
 const AdminPage = () => {
   return (
-    <div>
-      <h1>Admin Page</h1>
+    <div className="flex flex-row">
+      <div className="h-screen w-1/6">
+        <SideBar />
+      </div>
+      <div>
+        <Header />
+      </div>
     </div>
   );
 };

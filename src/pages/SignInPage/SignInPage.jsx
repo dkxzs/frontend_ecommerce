@@ -26,9 +26,9 @@ const SignInPage = () => {
       onSuccess: (data) => {
         if (data.EC === 0) {
           toast.success("Đăng nhập thành công!");
-          navigate("/");
+          // navigate("/");
           localStorage.setItem("access_token", data?.DT?.access_token);
-          dispatch(updateAccessToken(data)); 
+          dispatch(updateAccessToken(data));
           if (data?.DT?.access_token) {
             const decoded = jwtDecode(data.DT.access_token);
             if (decoded?.id) {
@@ -52,7 +52,11 @@ const SignInPage = () => {
   const handleGetDetailUser = async (id) => {
     const res = await getDetailUser(id);
     dispatch(login(res));
-    console.log("check res: ", res);
+    if (res?.DT?.isAdmin) {
+      navigate("/system/admin");
+    } else {
+      navigate("/");
+    }
   };
 
   const handleChange = (e) => {

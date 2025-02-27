@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 const HomePage = () => {
   let isAuth = useSelector((state) => state.user.isAuth);
   
+  
   return (
     <>
       <Slider />
