@@ -26,7 +26,6 @@ const SignInPage = () => {
       onSuccess: (data) => {
         if (data.EC === 0) {
           toast.success("Đăng nhập thành công!");
-          // navigate("/");
           localStorage.setItem("access_token", data?.DT?.access_token);
           dispatch(updateAccessToken(data));
           if (data?.DT?.access_token) {
@@ -34,7 +33,6 @@ const SignInPage = () => {
             if (decoded?.id) {
               handleGetDetailUser(decoded.id);
             }
-            // localStorage.setItem("user", JSON.stringify(decoded));
           }
         } else if (data.EC !== 0) {
           toast.error(data.EM || "Đăng nhập thất bại!");

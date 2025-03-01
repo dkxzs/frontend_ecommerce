@@ -44,7 +44,7 @@ instance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // Kiểm tra cả client-side và server-side expiration
+    // Kiểm tra token hết hạn
     const token = localStorage.getItem("access_token");
     const isServerTokenExpired =
       error.response?.data?.EC === -999 || error.response?.status === 401;
@@ -59,7 +59,10 @@ instance.interceptors.response.use(
 
       if (isRefreshing) {
         return new Promise((resolve) => {
-          failedRequestsQueue.push(() => resolve(instance(originalRequest)));
+          failedRequestsQueue.push((newToken) => {
+            originalRequest.headers.Authorization = `Bearer ${newToken}`;
+            resolve(instance(originalRequest));
+          });
         });
       }
 
@@ -69,27 +72,22 @@ instance.interceptors.response.use(
         const response = await refreshToken();
         const newToken = response?.DT?.access_token;
 
-        // Validate token response
         if (!newToken) throw new Error("Invalid refresh token response");
 
-        // Cập nhật đồng bộ cả Redux và localStorage
         store.dispatch(updateAccessToken(response));
         localStorage.setItem("access_token", newToken);
-
-        // Cập nhật header cho các request tiếp theo
         instance.defaults.headers.common.Authorization = `Bearer ${newToken}`;
 
-        // Retry request gốc với headers mới
+        // Retry request gốc
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         const retryResponse = await instance(originalRequest);
 
-        // Thực hiện các request trong hàng đợi
-        failedRequestsQueue.forEach((cb) => cb());
+        // Xử lý hàng đợi với token mới
+        failedRequestsQueue.forEach((cb) => cb(newToken));
         failedRequestsQueue = [];
 
         return retryResponse;
       } catch (refreshError) {
-        // Xử lý cleanup triệt để
         store.dispatch(logout());
         localStorage.removeItem("access_token");
         instance.defaults.headers.common.Authorization = "";

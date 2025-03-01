@@ -7,6 +7,8 @@ import SignUpPage from "../pages/SignUpPage/SignUpPage";
 import ProductDetailPage from "../pages/ProductDetailPage/ProductDetailPage";
 import ProfilePage from "../pages/ProfilePage/ProfilePage";
 import AdminPage from "../pages/AdminPage/AdminPage";
+import AdminUser from "../components/Admin/Pages/AdminUser/AdminUser";
+import AdminProduct from "../components/Admin/Pages/AdminProduct/AdminProduct";
 
 export const routes = [
   {
@@ -45,18 +47,7 @@ export const routes = [
     isShowHeaderFooter: false,
   },
   {
-    path: "/system/admin",
-    page: AdminPage,
-    isShowHeaderFooter: false,
-    isPrivate: true,
-    requiredRole: true,
-  },
-  {
     path: "/not-found",
     page: NotFoundPage,
-  },
-  {
-    path: "*",
-    page: NotFoundPage,
-  },
+  }
 ];

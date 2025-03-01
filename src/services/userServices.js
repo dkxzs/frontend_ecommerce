@@ -38,6 +38,16 @@ const updateUser = async (id, data) => {
   return res.data;
 };
 
+const getAllUsers = async () => {
+  const res = await axios.get("/user/get-all-user");
+  return res.data;
+};
+
+const deleteUser = async (id) => {
+  const res = await axios.delete(`/user/delete-user/${id}`);
+  return res.data;
+};
+
 export {
   loginUser,
   registerUser,
@@ -45,4 +55,6 @@ export {
   refreshToken,
   logoutUser,
   updateUser,
+  getAllUsers,
+  deleteUser,
 };
