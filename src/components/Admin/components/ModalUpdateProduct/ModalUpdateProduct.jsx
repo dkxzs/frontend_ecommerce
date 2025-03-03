@@ -67,11 +67,12 @@ const ModalUpdateProduct = (props) => {
       shortDescription: "",
       description: "",
       image: "",
+      color: "",
       is_new: false,
     });
   };
   const mutation = useMutationHook(
-    (product) => updateProduct(dataUpdate._id, product),
+    ({ id, product }) => updateProduct(id, product),
     {
       onSuccess: (data) => {
         if (+data.EC === 0) {
@@ -88,7 +89,7 @@ const ModalUpdateProduct = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    mutation.mutate(product);
+    mutation.mutate({ id: dataUpdate?._id, product });
     onCloseModal();
   };
 
@@ -126,8 +127,9 @@ const ModalUpdateProduct = (props) => {
                   <option value="">Chọn loại hàng</option>
                   <option value="Laptop">Laptop</option>
                   <option value="Phone">Phone</option>
-                  <option value="Phone">Desktop</option>
+                  <option value="Desktop">Desktop</option>
                   <option value="Watch">Watch</option>
+                  <option value="TV">TV</option>
                 </select>
               </div>
               <div>

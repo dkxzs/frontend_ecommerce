@@ -55,7 +55,7 @@ const SideBar = () => {
           </Sidebar.Item>
           <Sidebar.Item
             as={NavLink}
-            to="/login"
+            to="/sign-in"
             icon={HiArrowSmRight}
             className="text-xl cusor-pointer"
             onClick={() => {

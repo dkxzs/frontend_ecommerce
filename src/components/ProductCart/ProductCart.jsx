@@ -3,17 +3,23 @@ import { useState } from "react";
 
 import Button from "../Button/Button";
 import img from "../../assets/images/iphone16.jpg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const ProductCart = (props) => {
   const { product } = props;
   const [isWishlisted, setIsWishlisted] = useState(false);
 
+  const navigate = useNavigate();
+
+  const onClick = () => {
+    navigate(`/product-detail`, { state: product });
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden border">
       <div className="relative">
         <img
-          src={img}
+          src={product?.image}
           alt="Women's Classic Pullover Hoodie"
           className="w-full md:w-auto object-contain object-center mt-2"
         />
@@ -31,17 +37,17 @@ const ProductCart = (props) => {
       </div>
 
       <div className="p-4 space-y-3">
-        <Link to="/product-detail">
+        <div onClick={onClick}>
           <h3 className="font-medium text-2xl cursor-pointer line-clamp-2">
             {product?.name}
           </h3>
-        </Link>
+        </div>
 
         <div className="flex items-baseline gap-2">
           <span className="text-xl font-bold text-green-600">
-            {product?.price} vnd
+            {product?.price.toLocaleString()} vnd
           </span>
-          <span className="text-xl text-gray-500 ">-5%</span>
+          <span className="text-xl text-gray-500 ">{product?.discount || 0}%</span>
         </div>
 
         <p className="text-md text-ellipsis overflow-hidden line-clamp-2 text-gray-600">

@@ -1,7 +1,12 @@
 import axios from "../utils/axiosCustomize";
 
 const getAllProduct = async () => {
-  const res = await axios.get("/product/get-all-product");
+  const res = await axios.get(`/product/get-all-product`);
+  return res.data;
+};
+
+const getAllProductWithLimit = async (limit) => {
+  const res = await axios.get(`/product/get-all-product?limit=${limit}`);
   return res.data;
 };
 
@@ -25,10 +30,17 @@ const deleteProduct = async (id) => {
   return res.data;
 };
 
+const getAllNewProduct = async () => {
+  const res = await axios.get(`/product/get-all-new-product`);
+  return res.data;
+};
+
 export {
   getAllProduct,
   createProduct,
   getDetailProduct,
   updateProduct,
   deleteProduct,
+  getAllProductWithLimit,
+  getAllNewProduct,
 };

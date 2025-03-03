@@ -27,7 +27,7 @@ const Header = () => {
           <NavBar />
 
           <div className="flex items-center justify-center space-x-2">
-            <Link to="/search">
+            <Link to="/products">
               <button className="p-3 hover:bg-gray-100 rounded-full">
                 <FiSearch className="size-6" />
               </button>

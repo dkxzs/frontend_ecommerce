@@ -1,11 +1,5 @@
 import { useState } from "react";
-import {
-  FiSmartphone,
-  FiMonitor,
-  FiWatch,
-  FiTv,
-  FiPackage,
-} from "react-icons/fi";
+import { FiSmartphone, FiMonitor, FiWatch, FiTv } from "react-icons/fi";
 import { PiStorefrontBold } from "react-icons/pi";
 import { FaLaptop } from "react-icons/fa";
 
@@ -16,7 +10,6 @@ const filters = [
   { id: "desktop", label: "Desktop", icon: FiMonitor },
   { id: "watch", label: "Watch", icon: FiWatch },
   { id: "tv", label: "TV", icon: FiTv },
-  { id: "accessories", label: "Accessories", icon: FiPackage },
 ];
 
 const Category = () => {

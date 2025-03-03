@@ -1,4 +1,3 @@
-
 import { Modal } from "flowbite-react";
 import { useState } from "react";
 import { useMutationHook } from "../../../../hooks/useMutationHook";
@@ -18,6 +17,7 @@ const ModalAddProduct = (props) => {
     discount: "",
     shortDescription: "",
     description: "",
+    color: "",
     image: "",
   });
 
@@ -109,8 +109,10 @@ const ModalAddProduct = (props) => {
                   <option value="">Chọn loại hàng</option>
                   <option value="Laptop">Laptop</option>
                   <option value="Phone">Phone</option>
-                  <option value="Phone">Desktop</option>
+                  <option value="Desktop">Desktop</option>
                   <option value="Watch">Watch</option>
+                  <option value="TV">TV</option>
+                  <option value="newType">Thêm loại hàng</option>
                 </select>
               </div>
               <div>

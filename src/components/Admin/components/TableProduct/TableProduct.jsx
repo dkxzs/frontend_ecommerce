@@ -13,7 +13,11 @@ const TableProduct = ({ data, onClickUpdate, onClickDelete }) => {
     .filter((product) =>
       product.name.toLowerCase().includes(searchQuery.toLowerCase())
     )
-    .filter((product) => (filterType ? product.type === filterType : true))
+    .filter((product) =>
+      filterType
+        ? product.type.toLowerCase() === filterType.toLowerCase()
+        : true
+    )
     .sort((a, b) => {
       if (sortConfig.key) {
         const modifier = sortConfig.direction === "asc" ? 1 : -1;
