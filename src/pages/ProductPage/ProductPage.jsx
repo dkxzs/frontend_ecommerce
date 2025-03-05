@@ -3,27 +3,35 @@ import { useEffect, useState } from "react";
 import Banner from "../../components/Banner/Banner";
 import Category from "../../components/Category/Category";
 import ProductCart from "../../components/ProductCart/ProductCart";
-import { getAllProductWithLimit } from "../../services/productServices";
+import { getAllProductWithLimit, getAllTypeProduct } from "../../services/productServices";
 
 const ProductPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState("all");
   const [limit, setLimit] = useState(5);
-  const [allProducts, setAllProducts] = useState([]); // Lưu danh sách sản phẩm hiển thị
+  const [allProducts, setAllProducts] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
   const fetchAllProducts = async () => {
     const res = await getAllProductWithLimit(limit);
     return res.DT;
   };
 
-  const {
-    data: res,
-    refetch,
-    isFetching,
-  } = useQuery({
+  const fetchAllType = async () => {
+    const res = await getAllTypeProduct();
+    return res.DT;
+  };
+
+  const { data: resType } = useQuery({
+    queryKey: ["types"],
+    queryFn: fetchAllType,
+    keepPreviousData: false,
+  });
+
+  const { data: res, refetch, isFetching } = useQuery({
     queryKey: ["products", limit],
     queryFn: fetchAllProducts,
-    keepPreviousData: false, 
+    keepPreviousData: false,
   });
 
   useEffect(() => {
@@ -33,6 +41,9 @@ const ProductPage = () => {
   }, [res]);
 
   const filteredProducts = allProducts
+    .filter((product) =>
+      selectedCategory === "All" || product.type === selectedCategory
+    )
     .filter((product) =>
       product.name.toLowerCase().includes(searchQuery.toLowerCase())
     )
@@ -44,16 +55,16 @@ const ProductPage = () => {
 
   return (
     <>
-      <Category />
+      <Category data={resType} onSelectCategory={setSelectedCategory} />
       <Banner />
       <div className="container mx-auto">
         <div className="mt-3 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+          <div className=" flex items-center gap-4">
             <p className="text-3xl">Tìm kiếm</p>
             <input
               type="text"
               placeholder="Nhập tên sản phẩm..."
-              className="text-xl bg-gray-50 border rounded border-gray-300 text-gray-900 block px-2 py-1"
+              className="text-3xl bg-gray-50 border rounded border-gray-300 text-gray-900 block px-2 py-1"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />

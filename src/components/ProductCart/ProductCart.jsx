@@ -3,16 +3,26 @@ import { useState } from "react";
 
 import Button from "../Button/Button";
 import img from "../../assets/images/iphone16.jpg";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const ProductCart = (props) => {
   const { product } = props;
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const isLogin = useSelector((state) => state.user.isAuth);
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const onClick = () => {
     navigate(`/product-detail`, { state: product });
+  };
+
+  const handleAddToCart = () => {
+    if (isLogin) {
+    } else {
+      navigate("/sign-in", { state: location?.pathname });
+    }
   };
 
   return (
@@ -47,7 +57,9 @@ const ProductCart = (props) => {
           <span className="text-xl font-bold text-green-600">
             {product?.price.toLocaleString()} vnd
           </span>
-          <span className="text-xl text-gray-500 ">{product?.discount || 0}%</span>
+          <span className="text-xl text-gray-500 ">
+            {product?.discount || 0}%
+          </span>
         </div>
 
         <p className="text-md text-ellipsis overflow-hidden line-clamp-2 text-gray-600">
@@ -65,7 +77,7 @@ const ProductCart = (props) => {
           <Button
             text="Add to cart"
             className="text-lg flex-1 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors"
-            onclick={() => alert("successful")}
+            onclick={handleAddToCart}
           />
         </div>
       </div>

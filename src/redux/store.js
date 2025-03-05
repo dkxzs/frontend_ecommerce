@@ -11,18 +11,27 @@ import {
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import userReducer from "./slices/userSlice";
+import orderReducer from "./slices/orderSlice";
+import { combineReducers } from "redux";
 
-const persistConfig = {
-  key: "root",
+const userPersistConfig = {
+  key: "user",
   storage,
 };
 
-const persistedReducer = persistReducer(persistConfig, userReducer);
+const orderPersistConfig = {
+  key: "order",
+  storage,
+};
+
+// Tạo reducers có persist
+const rootReducer = combineReducers({
+  user: persistReducer(userPersistConfig, userReducer),
+  order: persistReducer(orderPersistConfig, orderReducer),
+});
 
 export const store = configureStore({
-  reducer: {
-    user: persistedReducer,
-  },
+  reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {

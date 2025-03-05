@@ -1,41 +1,32 @@
 import { useState } from "react";
-import { FiSmartphone, FiMonitor, FiWatch, FiTv } from "react-icons/fi";
-import { PiStorefrontBold } from "react-icons/pi";
-import { FaLaptop } from "react-icons/fa";
 
-const filters = [
-  { id: "all", label: "All", icon: PiStorefrontBold },
-  { id: "phone", label: "Phone", icon: FiSmartphone },
-  { id: "laptop", label: "Laptop", icon: FaLaptop },
-  { id: "desktop", label: "Desktop", icon: FiMonitor },
-  { id: "watch", label: "Watch", icon: FiWatch },
-  { id: "tv", label: "TV", icon: FiTv },
-];
-
-const Category = () => {
-  const [activeFilter, setActiveFilter] = useState("all");
+const Category = ({ data, onSelectCategory }) => {
+  const [activeFilter, setActiveFilter] = useState("All");
+  let listType = [
+    { id: "All", label: "All" },
+    ...(data ?? []).map((item) => ({ id: item, label: item })),
+  ];
 
   return (
     <nav className="w-full bg-gray-50 px-4 py-2">
       <ul className="flex items-center justify-between container mx-auto overflow-hidden">
-        {filters.map((filter) => {
-          const Icon = filter.icon;
-          return (
-            <li key={filter.id}>
-              <button
-                onClick={() => setActiveFilter(filter.id)}
-                className={`flex items-center p-2 rounded-lg gap-1 transition-colors ${
-                  activeFilter === filter.id
-                    ? "text-blue-600"
-                    : "text-gray-600 hover:text-gray-900"
-                }`}
-              >
-                <Icon className="w-7 h-7 mb-1" />
-                <span className="text-lg font-medium">{filter.label}</span>
-              </button>
-            </li>
-          );
-        })}
+        {listType.map((item, index) => (
+          <li key={index}>
+            <button
+              onClick={() => {
+                setActiveFilter(item.id);
+                onSelectCategory(item.id);
+              }}
+              className={`flex items-center p-2 rounded-lg gap-1 transition-colors ${
+                activeFilter === item.id
+                  ? "text-blue-600"
+                  : "text-gray-500 hover:text-gray-800"
+              }`}
+            >
+              <span className="text-lg font-medium">{item.label}</span>
+            </button>
+          </li>
+        ))}
       </ul>
     </nav>
   );

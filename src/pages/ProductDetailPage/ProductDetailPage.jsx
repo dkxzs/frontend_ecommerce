@@ -2,21 +2,41 @@ import { useEffect, useState } from "react";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { FaMinus, FaPlus } from "react-icons/fa6";
 import img from "../../assets/images/iphone16.jpg";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { addOrderProduct } from "../../redux/slices/orderSlice";
 const ProductDetailPage = () => {
   const location = useLocation();
   const product = location.state;
   const account = useSelector((state) => state.user.account);
+  const isLogin = useSelector((state) => state.user.isAuth);
+  const dispatch = useDispatch();
   const [quantity, setQuantity] = useState(1);
-  console.log("product", product);
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
   let navigate = useNavigate();
-  const [selectedColor, setSelectedColor] = useState("Đen");
-  const colors = ["Đen", "Trắng", "Màu xanh da trời", "Kaki", "Hồng"];
+
+  const handleAddToCart = () => {
+    if (isLogin) {
+      dispatch(
+        addOrderProduct({
+          orderItem: {
+            name: product?.name,
+            amount: quantity,
+            image: product?.image,
+            price: product?.price,
+            productId: product?._id,
+            discount: product?.discount,
+          },
+        })
+      );
+    } else {
+      navigate("/sign-in", { state: location?.pathname });
+    }
+  };
 
   const renderStart = (number) => {
     let stars = [];
@@ -61,7 +81,9 @@ const ProductDetailPage = () => {
         <div className="w-7/12 space-y-6 border-l border-gray-300 pl-4">
           <h1 className="text-5xl font-semibold">{product?.name}</h1>
           <div className="flex items-center space-x-2">
-            <span className="text-yellow-500 text-xl">{renderStart(product?.rating)}</span>
+            <span className="text-yellow-500 text-xl">
+              {renderStart(product?.rating)}
+            </span>
             <span className="text-gray-600 text-xl">
               {product?.rating} | Đã bán 1000+
             </span>
@@ -129,7 +151,10 @@ const ProductDetailPage = () => {
           </div>
 
           <div className="flex gap-4 mt-4">
-            <button className="bg-orange-500 text-3xl text-white py-3 px-8 rounded hover:bg-orange-600">
+            <button
+              className="bg-orange-500 text-3xl text-white py-3 px-8 rounded hover:bg-orange-600"
+              onClick={handleAddToCart}
+            >
               Thêm Vào Giỏ Hàng
             </button>
             <button className="bg-red-500 text-3xl text-white py-3 px-8 rounded hover:bg-red-600">

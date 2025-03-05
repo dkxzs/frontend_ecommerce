@@ -7,6 +7,7 @@ import AdminPage from "./pages/AdminPage/AdminPage.jsx";
 import AdminUser from "./components/Admin/Pages/AdminUser/AdminUser.jsx";
 import AdminProduct from "./components/Admin/Pages/AdminProduct/AdminProduct.jsx";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage.jsx";
+import ProtectedRouteClient from "./components/ProtectedRouteClient/ProtectedRouteClient.jsx";
 
 function App() {
   return (
@@ -19,6 +20,22 @@ function App() {
               .filter((route) => !route.isPrivate)
               .map((route, index) => (
                 <Route key={index} path={route.path} element={<route.page />} />
+              ))}
+          </Route>
+
+          <Route element={<DefaultLayout />}>
+            {routes
+              .filter((route) => route.isPrivate)
+              .map((route, index) => (
+                <Route
+                  key={index}
+                  path={route.path}
+                  element={
+                    <ProtectedRouteClient>
+                      <route.page />
+                    </ProtectedRouteClient>
+                  }
+                />
               ))}
           </Route>
 

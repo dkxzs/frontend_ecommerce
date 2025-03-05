@@ -35,6 +35,11 @@ const getAllNewProduct = async () => {
   return res.data;
 };
 
+const getAllTypeProduct = async () => {
+  const res = await axios.get(`/product/get-all-type`);
+  return res.data;
+};
+
 export {
   getAllProduct,
   createProduct,
@@ -43,4 +48,5 @@ export {
   deleteProduct,
   getAllProductWithLimit,
   getAllNewProduct,
+  getAllTypeProduct,
 };

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { loginUser, getDetailUser } from "../../services/userServices";
@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { login, updateAccessToken } from "../../redux/slices/userSlice";
 
 const SignInPage = () => {
+  const location = useLocation();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -19,6 +20,8 @@ const SignInPage = () => {
   const navigate = useNavigate();
   const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
   const dispatch = useDispatch();
+
+  console.log("check location: ", location);
 
   const mutation = useMutationHook(
     ({ email, password }) => loginUser(email, password),
@@ -53,6 +56,9 @@ const SignInPage = () => {
     if (res?.DT?.isAdmin) {
       navigate("/system/admin");
     } else {
+      if (location?.state) {
+        navigate(location?.state);
+      }
       navigate("/");
     }
   };

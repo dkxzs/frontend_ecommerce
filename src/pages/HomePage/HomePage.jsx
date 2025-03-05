@@ -14,7 +14,6 @@ const HomePage = () => {
     queryKey: ["newProduct"],
     queryFn: () => getAllNewProduct(),
   });
-  console.log("check data: ", data);
 
   return (
     <>
@@ -25,8 +24,8 @@ const HomePage = () => {
         </h1>
         <div className="container grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 mt-4 gap-6 mx-auto py-8">
           {data &&
-            data?.DT?.map((product) => (
-              <ProductCart product={product} key={product.id} />
+            data?.DT?.map((product, index) => (
+              <ProductCart product={product} key={product.id || index} />
             ))}
         </div>
         <div className="flex justify-center">

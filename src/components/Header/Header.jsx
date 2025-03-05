@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FiShoppingCart, FiSearch } from "react-icons/fi";
 import { FaRegUserCircle, FaRegHeart } from "react-icons/fa";
 import Container from "../Container/Container";
@@ -14,6 +14,8 @@ import { logoutUser } from "../../services/userServices";
 const Header = () => {
   let isLogin = useSelector((state) => state.user.isAuth);
   let account = useSelector((state) => state.user.account);
+  let order = useSelector((state) => state.order);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   return (
@@ -42,10 +44,13 @@ const Header = () => {
                   </span>
                 </button>
 
-                <button className="p-3 hover:bg-gray-100 rounded-full relative">
+                <button
+                  className="p-3 hover:bg-gray-100 rounded-full relative"
+                  onClick={() => navigate("/cart")}
+                >
                   <FiShoppingCart className="size-6" />
                   <span className="absolute -top-1 -right-1 bg-red-500 text-white text-sm w-5 h-5 flex items-center justify-center rounded-full">
-                    2
+                    {order?.orderItems?.length}
                   </span>
                 </button>
 

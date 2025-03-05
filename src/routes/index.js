@@ -1,14 +1,12 @@
 import HomePage from "../pages/HomePage/HomePage";
 import SignInPage from "../pages/SignInPage/SignInPage";
 import NotFoundPage from "../pages/NotFoundPage/NotFoundPage";
-import OrderPage from "../pages/OrderPage/OrderPage";
+import OrderPage from "../pages/CartPage/CartPage";
 import ProductPage from "../pages/ProductPage/ProductPage";
 import SignUpPage from "../pages/SignUpPage/SignUpPage";
 import ProductDetailPage from "../pages/ProductDetailPage/ProductDetailPage";
 import ProfilePage from "../pages/ProfilePage/ProfilePage";
-import AdminPage from "../pages/AdminPage/AdminPage";
-import AdminUser from "../components/Admin/Pages/AdminUser/AdminUser";
-import AdminProduct from "../components/Admin/Pages/AdminProduct/AdminProduct";
+import CheckoutPage from "../pages/CheckoutPage/CheckoutPage";
 
 export const routes = [
   {
@@ -27,9 +25,16 @@ export const routes = [
     isShowHeaderFooter: true,
   },
   {
-    path: "/order",
+    path: "/cart",
     page: OrderPage,
     isShowHeaderFooter: true,
+    isPrivate: true,
+  },
+  {
+    path: "/checkout",
+    page: CheckoutPage,
+    isShowHeaderFooter: true,
+    isPrivate: true,
   },
   {
     path: "/profile",
