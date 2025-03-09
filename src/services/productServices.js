@@ -40,6 +40,11 @@ const getAllTypeProduct = async () => {
   return res.data;
 };
 
+const getAllProductInStock = async () => {
+  const res = await axios.get(`/product/get-all-product-in-stock`);
+  return res.data;
+};
+
 export {
   getAllProduct,
   createProduct,
@@ -49,4 +54,5 @@ export {
   getAllProductWithLimit,
   getAllNewProduct,
   getAllTypeProduct,
+  getAllProductInStock,
 };

@@ -23,10 +23,10 @@ export const orderSlice = createSlice({
     addOrderProduct: (state, action) => {
       const { orderItem } = action.payload;
       const itemOrder = state.orderItems.find(
-        (item) => item.productId === orderItem.productId
+        (item) => item.product === orderItem.product
       );
       if (itemOrder) {
-        itemOrder.amount += orderItem.amount;
+        itemOrder.amount++;
       } else {
         state.orderItems.push(orderItem);
       }
@@ -34,7 +34,7 @@ export const orderSlice = createSlice({
     increaseAmount: (state, action) => {
       const { productId } = action.payload;
       const itemOrder = state.orderItems.find(
-        (item) => item.productId === productId
+        (item) => item.product === productId
       );
       if (itemOrder) {
         itemOrder.amount += 1;
@@ -43,7 +43,7 @@ export const orderSlice = createSlice({
     decreaseAmount: (state, action) => {
       const { productId } = action.payload;
       const itemOrder = state.orderItems.find(
-        (item) => item.productId === productId
+        (item) => item.product === productId
       );
       if (itemOrder) {
         itemOrder.amount -= 1;
@@ -52,17 +52,20 @@ export const orderSlice = createSlice({
     removeOrderProduct: (state, action) => {
       const { productId } = action.payload;
       state.orderItems = state.orderItems.filter(
-        (item) => item.productId !== productId
+        (item) => item.product !== productId
       );
     },
     removeAllOrderProduct: (state, action) => {
       const { listCheck } = action.payload;
       state.orderItems = state.orderItems.filter(
-        (item) => !listCheck.includes(item.productId)
+        (item) => !listCheck.includes(item.product)
       );
     },
     selectedOrder: (state, action) => {
       state.selectedItemOrders = action.payload;
+    },
+    removeAllSelectedOrder: (state) => {
+      state.selectedItemOrders = [];
     },
   },
 });
@@ -74,6 +77,7 @@ export const {
   removeOrderProduct,
   removeAllOrderProduct,
   selectedOrder,
+  removeAllSelectedOrder,
 } = orderSlice.actions;
 
 export default orderSlice.reducer;

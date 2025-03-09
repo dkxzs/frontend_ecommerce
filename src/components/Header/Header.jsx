@@ -91,7 +91,7 @@ const Header = () => {
                       </Dropdown.Item>
                       <Dropdown.Item
                         as={Link}
-                        to="/orders"
+                        to="/my-order"
                         className="text-xl px-7 py-2"
                       >
                         Đơn hàng

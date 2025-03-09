@@ -1,8 +1,12 @@
-import axios from "axios";
-
-const getProvince = async () => {
-  let data = await axios.get("https://open.oapi.vn/location/provinces");
-  return data;
+const orderContant = {
+  delivery: {
+    fast: "FAST",
+    standard: "STANDARD",
+  },
+  payment: {
+    cash: "Thanh toán tiền mặt khi nhận hàng",
+    PayPal: "Thanh toán bằng paypal",
+  },
 };
 
-export { getProvince };
+export { orderContant };

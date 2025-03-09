@@ -1,24 +1,45 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useMutationHook } from "../../hooks/useMutationHook";
+import { createOrder } from "../../services/orderServices";
+import { toast } from "react-toastify";
+import { updateUser } from "../../services/userServices";
+import { login } from "../../redux/slices/userSlice";
+import {
+  removeAllOrderProduct,
+  removeAllSelectedOrder,
+} from "../../redux/slices/orderSlice";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 const CheckoutPage = () => {
+  const location = useLocation();
+  const data = location.state;
+  let totalPrice = data?.finalPrice;
   const account = useSelector((state) => state.user.account);
+  const order = useSelector((state) => state.order);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [formCheckOut, setFormCheckOut] = useState({
+    shippingMethod: "standard",
+    paymentMethod: "cash",
+  });
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
-    email: "",
     address: "",
-    city: "",
   });
+
+  let products = order?.orderItems?.filter((item) =>
+    order?.selectedItemOrders?.includes(item.product)
+  );
 
   useEffect(() => {
     setFormData((prev) => ({
       ...prev,
       name: account?.name || "",
       phone: account?.phone || "",
-      email: account?.email || "",
       address: account?.address || "",
-      city: account?.city || "",
     }));
   }, [account]);
 
@@ -30,66 +51,133 @@ const CheckoutPage = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleChangeMethod = (e) => {
+    const { name, value } = e.target;
+    setFormCheckOut({
+      ...formCheckOut,
+      [name]: value,
+    });
+  };
+
+  const mutationUpdateUser = useMutationHook(
+    ({ id, userData }) => updateUser(id, userData),
+    {
+      onSuccess: (data) => {
+        if (+data.EC === 0) {
+          toast.success(data.EM);
+          dispatch(login(data));
+        } else {
+          toast.error(data.EM);
+        }
+      },
+    }
+  );
+
+  const mutationAddOrder = useMutationHook((data) => createOrder({ ...data }), {
+    onSuccess: (data) => {
+      if (+data.EC === 0) {
+        toast.success(data.EM);
+        dispatch(
+          removeAllOrderProduct({ listCheck: order?.selectedItemOrders })
+        );
+        dispatch(removeAllSelectedOrder());
+        navigate("/order", {
+          state: {
+            shippingMethod: formCheckOut.shippingMethod,
+            paymentMethod: formCheckOut.paymentMethod,
+            orders: products,
+            totalPrice: totalPrice,
+          },
+        });
+      } else {
+        toast.error(data.EM);
+      }
+    },
+  });
+
+  const handleUpdateUser = (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log("Form submitted:", formData);
+    mutationUpdateUser.mutate({ id: account?.id, userData: formData });
+  };
+
+  products = products.map((item) => ({
+    ...item,
+    discount: item.discount ? item.discount : 0,
+  }));
+
+  const handleAddOrder = (e) => {
+    e.preventDefault();
+    if (!formData.name || !formData.phone || !formData.address) {
+      toast.error("Vui lòng nhập thông tin!");
+    } else {
+      mutationAddOrder.mutate({
+        orderItems: products,
+        fullName: formData.name,
+        phone: formData.phone,
+        address: formData.address,
+        paymentMethod: formCheckOut.paymentMethod,
+        itemsPrice: data.subPrice,
+        shippingPrice: data.shippingPrice,
+        totalPrice: data.finalPrice,
+        user: account?.id,
+      });
+    }
   };
 
   return (
-    <div className="container mx-auto h-screen">
+    <div className="container mx-auto mb-5 md:h-screen">
       <h1 className="text-3xl font-medium mb-6 mt-5">Thanh toán</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Left Column - Shipping Address */}
-        <div className="bg-white p-6 rounded-lg border border-gray-200">
+        <div className="h-auto bg-white p-6 rounded-lg border border-gray-200">
           <h2 className="text-xl font-medium mb-4">Thông tin nhận hàng</h2>
-          <form onSubmit={handleSubmit}>
+          <form>
             <div className="space-y-8">
-              <input
-                type="text"
-                name="name"
-                placeholder="Họ Tên"
-                className="w-full p-3 border border-gray-300 rounded-md"
-                value={formData.name}
-                onChange={handleChange}
-              />
+              <div>
+                <label htmlFor="name">Tên</label>
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Họ Tên"
+                  className="w-full p-3 border border-gray-300 rounded-md"
+                  value={formData.name}
+                  onChange={handleChange}
+                />
+              </div>
 
-              <input
-                type="text"
-                name="phone"
-                placeholder="Số điện thoại"
-                className="w-full p-3 border border-gray-300 rounded-md"
-                value={formData.phone}
-                onChange={handleChange}
-              />
+              <div>
+                <label htmlFor="phone">Số điện thoại</label>
+                <input
+                  type="text"
+                  name="phone"
+                  placeholder="Số điện thoại"
+                  className="w-full p-3 border border-gray-300 rounded-md"
+                  value={formData.phone}
+                  onChange={handleChange}
+                />
+              </div>
 
-              <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                className="w-full p-3 border border-gray-300 rounded-md"
-                value={formData.email}
-                onChange={handleChange}
-              />
-
-              <input
-                type="text"
-                name="address"
-                placeholder="Địa chỉ"
-                className="w-full p-3 border border-gray-300 rounded-md"
-                value={formData.address}
-                onChange={handleChange}
-              />
-
-              <input
-                type="text"
-                name="city"
-                placeholder="Thành phố"
-                className="w-full p-3 border border-gray-300 rounded-md"
-                value={formData.city}
-                onChange={handleChange}
-              />
+              <div>
+                <label htmlFor="address">Địa chỉ</label>
+                <input
+                  type="text"
+                  name="address"
+                  placeholder="Địa chỉ"
+                  className="w-full p-3 border border-gray-300 rounded-md"
+                  value={formData.address}
+                  onChange={handleChange}
+                />
+              </div>
             </div>
+            <button
+              type="submit"
+              className="w-full bg-blue-500 hover:bg-blue-600 text-white py-4 px-4 rounded mt-4"
+              onClick={(e) => {
+                handleUpdateUser(e);
+              }}
+            >
+              Cập nhật thông tin
+            </button>
           </form>
         </div>
 
@@ -97,86 +185,139 @@ const CheckoutPage = () => {
         <div className="space-y-6">
           {/* Products Section */}
           <div className="bg-white p-6 rounded-lg border border-gray-200">
-            <h2 className="text-xl font-medium mb-4">Sản phẩm</h2>
-            <div className="flex items-center gap-4 mb-4">
-              <div className="w-16 h-16 bg-gray-100 rounded-md overflow-hidden">
-                <img
-                  src="/placeholder.svg?height=64&width=64"
-                  alt="iPhone"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-medium">
-                  Apple iPhone 15 Plus Mini 128GB - Pink
-                </h3>
-                <p className="text-green-600 text-sm">₹ 2599 X 1</p>
-              </div>
-              <div className="text-right">
-                <p className="font-medium">₹ 2599</p>
-              </div>
-            </div>
+            <h2 className="text-2xl font-medium mb-4">Sản phẩm</h2>
+            {products &&
+              products.map((item, index) => {
+                return (
+                  <div key={index}>
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="w-16 h-16 bg-gray-100 rounded-md overflow-hidden">
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-medium text-2xl">{item.name}</h3>
+                        <p className="text-green-600 text-lg">
+                          {item.price.toLocaleString()} đ x {item.amount} - (
+                          {item.discount || 0} %)
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-medium text-2xl">
+                          {(
+                            item.price *
+                            item.amount *
+                            (1 - item.discount / 100)
+                          ).toLocaleString()}{" "}
+                          đ
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             <div className="flex justify-between pt-4 border-t border-gray-200">
-              <h3 className="font-medium">Tổng tiền</h3>
-              <p className="font-medium">₹ 2599</p>
+              <h3 className="font-medium text-2xl">Tổng tiền</h3>
+              <p className="font-medium text-2xl">
+                {data?.finalPrice.toLocaleString() || 0} đ
+              </p>
             </div>
           </div>
 
           {/* Payment Mode Section */}
           <div className="bg-white p-6 rounded-lg border border-gray-200">
-            <h2 className="text-xl font-medium mb-4">Payment Mode</h2>
+            <h2 className="text-2xl font-medium mb-4">Phương thức giao hàng</h2>
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <input
                   type="radio"
-                  id="prepaid"
-                  name="paymentMode"
-                  value="prepaid"
-                  checked={formData.paymentMode === "prepaid"}
-                  onChange={handleChange}
-                  className="h-4 w-4"
+                  name="shippingMethod"
+                  value="fast"
+                  id="fast"
+                  checked={formCheckOut.shippingMethod === "fast"}
+                  onChange={handleChangeMethod}
+                  className="h-6 w-6"
                 />
-                <label htmlFor="prepaid">Prepaid</label>
+                <label htmlFor="fast" className="text-xl">
+                  Giao hàng nhanh (FAST)
+                </label>
               </div>
 
               <div className="flex items-center gap-2">
                 <input
                   type="radio"
-                  id="cod"
-                  name="paymentMode"
-                  value="cod"
-                  checked={formData.paymentMode === "cod"}
-                  onChange={handleChange}
-                  className="h-4 w-4"
+                  id="standard"
+                  name="shippingMethod"
+                  value="standard"
+                  checked={formCheckOut.shippingMethod === "standard"}
+                  onChange={handleChangeMethod}
+                  className="h-6 w-6"
                 />
-                <label htmlFor="cod">Cash On Delivery</label>
+                <label htmlFor="standard" className="text-xl">
+                  Giao hàng tiêu chuẩn (STANDARD)
+                </label>
+              </div>
+            </div>
+          </div>
+          <div className="bg-white p-6 rounded-lg border border-gray-200">
+            <h2 className="text-xl font-medium mb-4">Phương thức thanh toán</h2>
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  id="cash"
+                  name="paymentMethod"
+                  value="cash"
+                  checked={formCheckOut.paymentMethod === "cash"}
+                  onChange={handleChangeMethod}
+                  className="h-6 w-6 focus:ring-offset-0"
+                />
+                <label htmlFor="cash" className="text-xl">
+                  Thanh toán khi nhận hàng
+                </label>
               </div>
 
-              <div className="flex items-center gap-2 mt-4">
+              <div className="flex items-center gap-2">
                 <input
-                  type="checkbox"
-                  id="terms"
-                  name="termsAgreed"
-                  checked={formData.termsAgreed}
-                  onChange={handleChange}
-                  className="h-4 w-4"
+                  type="radio"
+                  id="PayPal"
+                  name="paymentMethod"
+                  value="PayPal"
+                  checked={formCheckOut.paymentMethod === "PayPal"}
+                  onChange={handleChangeMethod}
+                  className="h-6 w-6 focus:ring-offset-0"
                 />
-                <label htmlFor="terms" className="text-sm">
-                  I agree with the{" "}
-                  <a href="#" className="text-blue-600">
-                    terms & conditions
-                  </a>
+                <label htmlFor="PayPal" className="text-xl">
+                  Thanh toán bằng paypal
                 </label>
               </div>
             </div>
 
-            <button
-              type="submit"
-              className="w-full mt-6 bg-black text-white py-3 px-4 rounded-md hover:bg-gray-800 transition"
-              onClick={handleSubmit}
-            >
-              Đặt hàng
-            </button>
+            {formCheckOut.paymentMethod === "PayPal" ? (
+              <div className="mt-6">
+                <PayPalScriptProvider
+                  options={{
+                    clientId:
+                      "AcsCpRC8OetQjTf0D7CfvUfIehOzIDxDEFObWnI5X8wfnhjbdXzwZgjgKb_hhim7cWrlr_0hDL-I5uZ9",
+                  }}
+                >
+                  <PayPalButtons style={{ layout: "horizontal" }} />
+                </PayPalScriptProvider>
+              </div>
+            ) : (
+              <button
+                type="submit"
+                className="w-full mt-6 bg-black text-white py-3 px-4 rounded-md hover:bg-gray-800 transition"
+                onClick={(e) => {
+                  handleAddOrder(e);
+                }}
+              >
+                Đặt hàng
+              </button>
+            )}
           </div>
         </div>
       </div>

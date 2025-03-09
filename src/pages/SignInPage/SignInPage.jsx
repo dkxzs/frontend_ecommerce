@@ -21,8 +21,6 @@ const SignInPage = () => {
   const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
   const dispatch = useDispatch();
 
-  console.log("check location: ", location);
-
   const mutation = useMutationHook(
     ({ email, password }) => loginUser(email, password),
     {

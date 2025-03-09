@@ -28,7 +28,7 @@ const ProductDetailPage = () => {
             amount: quantity,
             image: product?.image,
             price: product?.price,
-            productId: product?._id,
+            product: product?._id,
             discount: product?.discount,
           },
         })
@@ -79,20 +79,30 @@ const ProductDetailPage = () => {
         </div>
 
         <div className="w-7/12 space-y-6 border-l border-gray-300 pl-4">
-          <h1 className="text-5xl font-semibold">{product?.name}</h1>
+          <h1 className="text-5xl font-semibold">
+            {product?.name} -{" "}
+            <span className="text-red-600">
+              {product?.discount > 0 ? "Giảm " + product?.discount + "%" : ""}
+            </span>
+          </h1>
           <div className="flex items-center space-x-2">
             <span className="text-yellow-500 text-xl">
               {renderStart(product?.rating)}
             </span>
             <span className="text-gray-600 text-xl">
-              {product?.rating} | Đã bán 1000+
+              {product?.rating} | Đã bán {product?.selled || 0}{" "}
+              {product?.countInStock === 0 ? "| Hết hàng" : ""}
             </span>
           </div>
           <div>
             <p className="text-gray-600 text-xl">{product?.shortDescription}</p>
           </div>
           <div className="text-red-600 text-5xl font-bold">
-            {product?.price.toLocaleString()} ₫
+            {(
+              product?.price -
+              (product?.price * product?.discount) / 100
+            ).toLocaleString()}{" "}
+            ₫
           </div>
 
           <div className="flex items-center gap-2">
@@ -154,11 +164,9 @@ const ProductDetailPage = () => {
             <button
               className="bg-orange-500 text-3xl text-white py-3 px-8 rounded hover:bg-orange-600"
               onClick={handleAddToCart}
+              disabled={product?.countInStock === 0}
             >
               Thêm Vào Giỏ Hàng
-            </button>
-            <button className="bg-red-500 text-3xl text-white py-3 px-8 rounded hover:bg-red-600">
-              Mua Ngay
             </button>
           </div>
         </div>

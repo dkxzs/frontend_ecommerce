@@ -20,11 +20,13 @@ const CartPage = () => {
 
   const handleSelectAll = (e) => {
     if (e.target.checked) {
-      setListCheck(order?.orderItems?.map((item) => item.productId));
+      setListCheck(order?.orderItems?.map((item) => item.product));
     } else {
       setListCheck([]);
     }
   };
+
+  console.log("selectedItems: ", selectedItems);
 
   useEffect(() => {
     dispatch(selectedOrder(listCheck));
@@ -40,7 +42,7 @@ const CartPage = () => {
 
   const handleQuantityChange = (type, productId) => {
     const product = order?.orderItems?.find(
-      (item) => item.productId === productId
+      (item) => item.product === productId
     );
     if (!product) return;
 
@@ -67,9 +69,11 @@ const CartPage = () => {
 
   const calculateSubtotal = useMemo(() => {
     return order?.orderItems
-      ?.filter((item) => listCheck.includes(item.productId))
+      ?.filter((item) => listCheck.includes(item.product))
       .reduce((total, item) => {
-        return total + item.price * item.amount * (1 - item.discount / 100);
+        return (
+          total + item.price * item.amount * (1 - (item.discount || 0) / 100)
+        );
       }, 0);
   }, [order?.orderItems, listCheck]);
 
@@ -88,7 +92,13 @@ const CartPage = () => {
   }, [calculateSubtotal, calculatePriceDelivery]);
 
   const handleCheckOut = () => {
-    navigate("/checkout");
+    navigate("/checkout", {
+      state: {
+        finalPrice: calculateTotal,
+        subPrice: calculateSubtotal,
+        shippingPrice: calculatePriceDelivery,
+      },
+    });
   };
 
   return (
@@ -133,8 +143,8 @@ const CartPage = () => {
                     <input
                       type="checkbox"
                       className="h-4 w-4 outline-none focus:outline-none focus:ring-0 focus:ring-offset-0"
-                      value={item.productId}
-                      checked={listCheck.includes(item.productId)}
+                      value={item.product}
+                      checked={listCheck.includes(item.product)}
                       onChange={(e) => handleSelectItem(e)}
                     />
                     <div className="flex-shrink-0">
@@ -164,7 +174,7 @@ const CartPage = () => {
                       <button
                         className="w-8 h-8 border border-gray-300 flex items-center justify-center rounded-l-md"
                         onClick={() =>
-                          handleQuantityChange("decrement", item.productId)
+                          handleQuantityChange("decrement", item.product)
                         }
                       >
                         −
@@ -178,7 +188,7 @@ const CartPage = () => {
                       <button
                         className="w-8 h-8 border border-gray-300 flex items-center justify-center rounded-r-md"
                         onClick={() =>
-                          handleQuantityChange("increase", item.productId)
+                          handleQuantityChange("increase", item.product)
                         }
                       >
                         +
@@ -198,7 +208,7 @@ const CartPage = () => {
                   <div className="col-span-1 text-center">
                     <button
                       className="text-gray-500 hover:text-red-500"
-                      onClick={() => handleDeleteItem(item.productId)}
+                      onClick={() => handleDeleteItem(item.product)}
                     >
                       <FiTrash size={18} />
                     </button>
@@ -253,7 +263,7 @@ const CartPage = () => {
                     handleCheckOut();
                   }}
                 >
-                  Mua hàng
+                  Thanh toán
                 </button>
               </div>
             </div>
