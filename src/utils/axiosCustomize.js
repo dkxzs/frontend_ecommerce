@@ -5,7 +5,7 @@ import { refreshToken } from "../services/userServices";
 import { logout, updateAccessToken } from "../redux/slices/userSlice";
 
 const instance = axios.create({
-  baseURL: "http://localhost:8080/api",
+  baseURL: "https://backend-ecommerce-mdxo.onrender.com/api",
   withCredentials: true,
 });
 
