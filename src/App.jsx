@@ -6,6 +6,7 @@ import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute.jsx";
 import AdminPage from "./pages/AdminPage/AdminPage.jsx";
 import AdminUser from "./components/Admin/Pages/AdminUser/AdminUser.jsx";
 import AdminProduct from "./components/Admin/Pages/AdminProduct/AdminProduct.jsx";
+import AdminOrder from "./components/Admin/Pages/AdminOrder/AdminOrder.jsx";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage.jsx";
 import ProtectedRouteClient from "./components/ProtectedRouteClient/ProtectedRouteClient.jsx";
 
@@ -51,6 +52,7 @@ function App() {
             <Route index element={<div>Welcome to Admin Dashboard</div>} />
             <Route path="user" element={<AdminUser />} />
             <Route path="product" element={<AdminProduct />} />
+            <Route path="orders" element={<AdminOrder />} />
           </Route>
 
           {/* Route Not Found */}

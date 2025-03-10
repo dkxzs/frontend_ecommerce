@@ -25,11 +25,15 @@ const cancelOrder = async (id, orderItems) => {
   return res.data;
 };
 
-
+const getAllOrder = async () => {
+  let res = await axios.get("/order/get-all-order");
+  return res.data;
+};
 
 export {
   createOrder,
   getAllOrderByUserId,
   getOrderDetailByOrderId,
   cancelOrder,
+  getAllOrder,
 };
