@@ -5,13 +5,19 @@ import Button from "../Button/Button";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addOrderProduct } from "../../redux/slices/orderSlice";
+import {
+  addWishlistProduct,
+  removeWishlistProduct,
+} from "../../redux/slices/wishlistSlice";
 
 const ProductCart = (props) => {
   const { product } = props;
   const dispatch = useDispatch();
-  const [isWishlisted, setIsWishlisted] = useState(false);
   const isLogin = useSelector((state) => state.user.isAuth);
-
+  const wishlist = useSelector((state) => state.wishlist.wishlistItems);
+  const isWishlisted = wishlist?.some(
+    (item) => item.product === (product?._id || product?.product)
+  );
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -38,6 +44,33 @@ const ProductCart = (props) => {
     }
   };
 
+  const handleAddToWishlist = () => {
+    if (isLogin) {
+      if (!isWishlisted) {
+        dispatch(
+          addWishlistProduct({
+            wishlistItem: {
+              name: product?.name,
+              image: product?.image,
+              price: product?.price,
+              discount: product?.discount,
+              rating: product?.rating,
+              description: product?.shortDescription,
+              selled: product?.selled,
+              product: product?._id,
+            },
+          })
+        );
+      } else {
+        dispatch(
+          removeWishlistProduct({ productId: product?._id || product?.product })
+        );
+      }
+    } else {
+      navigate("/sign-in", { state: location?.pathname });
+    }
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden border">
       <div className="relative">
@@ -49,7 +82,7 @@ const ProductCart = (props) => {
         <button
           className="absolute right-2 top-2 p-1.5 rounded-full hover:bg-white/90"
           aria-label="Add to wishlist"
-          onClick={() => setIsWishlisted(!isWishlisted)}
+          onClick={handleAddToWishlist}
         >
           {isWishlisted ? (
             <FaHeart className="size-7 text-red-500" />

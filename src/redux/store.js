@@ -12,6 +12,7 @@ import {
 import storage from "redux-persist/lib/storage";
 import userReducer from "./slices/userSlice";
 import orderReducer from "./slices/orderSlice";
+import wishlistReducer from "./slices/wishlistSlice";
 import { combineReducers } from "redux";
 
 const userPersistConfig = {
@@ -24,10 +25,16 @@ const orderPersistConfig = {
   storage,
 };
 
+const wishlistPersistConfig = {
+  key: "wishlist",
+  storage,
+};
+
 // Tạo reducers có persist
 const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, userReducer),
   order: persistReducer(orderPersistConfig, orderReducer),
+  wishlist: persistReducer(wishlistPersistConfig, wishlistReducer),
 });
 
 export const store = configureStore({

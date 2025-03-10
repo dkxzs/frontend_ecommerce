@@ -18,6 +18,7 @@ const Header = () => {
   let isLogin = useSelector((state) => state.user.isAuth);
   let account = useSelector((state) => state.user.account);
   let order = useSelector((state) => state.order);
+  let wishlist = useSelector((state) => state.wishlist);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -26,7 +27,6 @@ const Header = () => {
     {}
   );
 
-  // console.log("newOrder", order?.orderItems);
   const handleLogout = async () => {
     dispatch(logout());
     mutationUpdateCart.mutate({ id: account.id, data: order?.orderItems });
@@ -57,10 +57,13 @@ const Header = () => {
 
             {isLogin ? (
               <>
-                <button className="p-3 hover:bg-gray-100 rounded-full relative ">
+                <button
+                  className="p-3 hover:bg-gray-100 rounded-full relative"
+                  onClick={() => navigate("/wishlist")}
+                >
                   <FaRegHeart className="size-6" />
                   <span className="absolute -top-1 -right-1 bg-red-500 text-white text-sm w-5 h-5 flex items-center justify-center rounded-full">
-                    2
+                    {wishlist?.wishlistItems?.length}
                   </span>
                 </button>
 

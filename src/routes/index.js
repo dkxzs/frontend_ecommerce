@@ -10,6 +10,7 @@ import CartPage from "../pages/CartPage/CartPage";
 import OrderPage from "../pages/OrderPage/OrderPage";
 import MyOrderPage from "../pages/MyOrderPage/MyOrderPage";
 import OrderDetailPage from "../pages/OrderDetailPage/OrderDetailPage";
+import WishlistPage from "../pages/WishlistPage/WishlistPage";
 
 export const routes = [
   {
@@ -54,6 +55,12 @@ export const routes = [
   {
     path: "/checkout",
     page: CheckoutPage,
+    isShowHeaderFooter: true,
+    isPrivate: true,
+  },
+  {
+    path: "/wishlist",
+    page: WishlistPage,
     isShowHeaderFooter: true,
     isPrivate: true,
   },
