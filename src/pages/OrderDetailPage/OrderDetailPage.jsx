@@ -1,11 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { FaCreditCard, FaTruck } from "react-icons/fa6";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getOrderDetailByOrderId } from "../../services/orderServices";
 import { orderContant } from "../../utils/constant";
 
 const OrderDetailPage = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { state } = location;
 
   const getMyOrderDetail = ({ id }) => {
@@ -19,7 +20,6 @@ const OrderDetailPage = () => {
     enabled: !!state?.id,
   });
 
-  console.log("res", res?.DT);
   const shippingAddress = res?.DT?.shippingAddress;
   const orderItems = res?.DT?.orderItems;
 
@@ -79,7 +79,7 @@ const OrderDetailPage = () => {
                 </p>
               </div>
               <p className="text-orange-500">
-                {res?.DT.isPaid ? "Đã thanh toán" : "Chưa thanh toán"}
+                {res?.DT?.isPaid ? "Đã thanh toán" : "Chưa thanh toán"}
               </p>
             </div>
           </div>
@@ -152,7 +152,10 @@ const OrderDetailPage = () => {
 
         {/* Nút hành động */}
         <div className="mt-6 flex justify-end space-x-4">
-          <button className="px-6 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
+          <button
+            className="px-6 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+            onClick={() => navigate(-1)}
+          >
             Quay lại
           </button>
           {state?.status === "pending" ? (

@@ -25,9 +25,7 @@ const CartPage = () => {
       setListCheck([]);
     }
   };
-
-  console.log("selectedItems: ", selectedItems);
-
+ 
   useEffect(() => {
     dispatch(selectedOrder(listCheck));
   }, [listCheck, dispatch]);

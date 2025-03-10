@@ -2,12 +2,13 @@ import { FaRegHeart, FaHeart, FaStar } from "react-icons/fa";
 import { useState } from "react";
 
 import Button from "../Button/Button";
-import img from "../../assets/images/iphone16.jpg";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { addOrderProduct } from "../../redux/slices/orderSlice";
 
 const ProductCart = (props) => {
   const { product } = props;
+  const dispatch = useDispatch();
   const [isWishlisted, setIsWishlisted] = useState(false);
   const isLogin = useSelector((state) => state.user.isAuth);
 
@@ -20,6 +21,18 @@ const ProductCart = (props) => {
 
   const handleAddToCart = () => {
     if (isLogin) {
+      dispatch(
+        addOrderProduct({
+          orderItem: {
+            name: product?.name,
+            amount: 1,
+            image: product?.image,
+            price: product?.price,
+            product: product?._id,
+            discount: product?.discount,
+          },
+        })
+      );
     } else {
       navigate("/sign-in", { state: location?.pathname });
     }
@@ -49,7 +62,7 @@ const ProductCart = (props) => {
       <div className="p-4 space-y-3">
         <div onClick={onClick}>
           <h3 className="font-medium text-2xl cursor-pointer line-clamp-2">
-            {product?.name}
+            {product?.name} {product?.countInStock === 0 ? "- Hết hàng" : ""}
           </h3>
         </div>
 
@@ -75,9 +88,10 @@ const ProductCart = (props) => {
 
         <div className="flex items-center gap-2 pt-2">
           <Button
-            text="Add to cart"
+            text="Thêm vào giỏ hàng"
             className="text-lg flex-1 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors"
             onclick={handleAddToCart}
+            disabled={product?.countInStock === 0}
           />
         </div>
       </div>

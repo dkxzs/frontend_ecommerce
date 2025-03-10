@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMutationHook } from "../../hooks/useMutationHook";
@@ -11,11 +11,13 @@ import {
   removeAllSelectedOrder,
 } from "../../redux/slices/orderSlice";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { getClientIdKey } from "../../services/paymentServices";
 
 const CheckoutPage = () => {
+  const [clientID, setClientID] = useState(null);
   const location = useLocation();
-  const data = location.state;
-  let totalPrice = data?.finalPrice;
+  const dataOrder = location.state;
+  let totalPrice = dataOrder?.finalPrice;
   const account = useSelector((state) => state.user.account);
   const order = useSelector((state) => state.order);
   const navigate = useNavigate();
@@ -116,12 +118,51 @@ const CheckoutPage = () => {
         phone: formData.phone,
         address: formData.address,
         paymentMethod: formCheckOut.paymentMethod,
-        itemsPrice: data.subPrice,
-        shippingPrice: data.shippingPrice,
-        totalPrice: data.finalPrice,
+        itemsPrice: dataOrder.subPrice,
+        shippingPrice: dataOrder.shippingPrice,
+        totalPrice: dataOrder.finalPrice,
         user: account?.id,
+        email: account?.email,
       });
     }
+  };
+
+  useEffect(() => {
+    const fetchClientId = async () => {
+      const res = await getClientIdKey();
+      setClientID(res.data);
+    };
+    fetchClientId();
+  }, []);
+
+  const handleApprove = (data, actions) => {
+    return actions.order
+      .capture()
+      .then((details) => {
+        mutationAddOrder.mutate({
+          orderItems: products,
+          fullName: formData.name,
+          phone: formData.phone,
+          address: formData.address,
+          paymentMethod: formCheckOut.paymentMethod,
+          itemsPrice: dataOrder.subPrice,
+          shippingPrice: dataOrder.shippingPrice,
+          totalPrice: dataOrder.finalPrice,
+          user: account?.id,
+          isPaid: true,
+          paidAt: details.update_time,
+          email: account?.email,
+        });
+      })
+      .catch((err) => {
+        console.error("Lỗi khi capture giao dịch:", err);
+      });
+  };
+
+  const handleError = (err) => {
+    // Xử lý lỗi tại đây
+    console.error("PayPal Checkout onError", err);
+    // Hiển thị thông báo lỗi hoặc chuyển hướng nếu cần
   };
 
   return (
@@ -222,7 +263,10 @@ const CheckoutPage = () => {
             <div className="flex justify-between pt-4 border-t border-gray-200">
               <h3 className="font-medium text-2xl">Tổng tiền</h3>
               <p className="font-medium text-2xl">
-                {data?.finalPrice.toLocaleString() || 0} đ
+                {(products.length > 0 &&
+                  dataOrder?.finalPrice.toLocaleString()) ||
+                  0}{" "}
+                đ
               </p>
             </div>
           </div>
@@ -300,11 +344,27 @@ const CheckoutPage = () => {
               <div className="mt-6">
                 <PayPalScriptProvider
                   options={{
-                    clientId:
-                      "AcsCpRC8OetQjTf0D7CfvUfIehOzIDxDEFObWnI5X8wfnhjbdXzwZgjgKb_hhim7cWrlr_0hDL-I5uZ9",
+                    "client-id": clientID,
+                    currency: "USD",
                   }}
                 >
-                  <PayPalButtons style={{ layout: "horizontal" }} />
+                  <PayPalButtons
+                    style={{ layout: "horizontal" }}
+                    createOrder={(data, actions) => {
+                      return actions.order.create({
+                        purchase_units: [
+                          {
+                            amount: {
+                              currency_code: "USD",
+                              value: (parseInt(totalPrice) / 25000).toFixed(2),
+                            },
+                          },
+                        ],
+                      });
+                    }}
+                    onApprove={handleApprove}
+                    onError={handleError}
+                  />
                 </PayPalScriptProvider>
               </div>
             ) : (
@@ -314,6 +374,7 @@ const CheckoutPage = () => {
                 onClick={(e) => {
                   handleAddOrder(e);
                 }}
+                disabled={products.length === 0}
               >
                 Đặt hàng
               </button>

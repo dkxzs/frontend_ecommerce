@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 const Button = (props) => {
   const navigate = useNavigate();
-  const { text, className, path, onclick } = props;
+  const { text, className, path, onclick, disabled } = props;
   const onClick = () => {
     if (path) {
       navigate(path);
@@ -10,7 +10,11 @@ const Button = (props) => {
     }
   };
   return (
-    <button className={className} onClick={onClick}>
+    <button
+      className={className}
+      onClick={onClick}
+      disabled={disabled || false}
+    >
       {text}
     </button>
   );

@@ -17,7 +17,7 @@ const initialState = {
 };
 
 export const orderSlice = createSlice({
-  name: "counter",
+  name: "order",
   initialState,
   reducers: {
     addOrderProduct: (state, action) => {
@@ -67,6 +67,13 @@ export const orderSlice = createSlice({
     removeAllSelectedOrder: (state) => {
       state.selectedItemOrders = [];
     },
+    setOrder: (state, action) => {
+      let orderItems = action.payload;
+      state.orderItems = orderItems;
+    },
+    removeAll: (state) => {
+      return initialState;
+    },
   },
 });
 
@@ -78,6 +85,8 @@ export const {
   removeAllOrderProduct,
   selectedOrder,
   removeAllSelectedOrder,
+  removeAll,
+  setOrder,
 } = orderSlice.actions;
 
 export default orderSlice.reducer;

@@ -7,6 +7,9 @@ import { useMutationHook } from "../../hooks/useMutationHook";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch } from "react-redux";
 import { login, updateAccessToken } from "../../redux/slices/userSlice";
+import { getCart } from "../../services/cartServices";
+import { setOrder } from "../../redux/slices/orderSlice";
+import { useQuery } from "@tanstack/react-query";
 
 const SignInPage = () => {
   const location = useLocation();
@@ -58,6 +61,10 @@ const SignInPage = () => {
         navigate(location?.state);
       }
       navigate("/");
+      const res = await getCart(id);
+      if (res) {
+        dispatch(setOrder(res.cartItems));
+      }
     }
   };
 
@@ -96,6 +103,19 @@ const SignInPage = () => {
     setLoading(true);
     mutation.mutate({ email: formData.email, password: formData.password });
   };
+
+  // const setCart = async () => {
+  //   let res = await getCart(account.id);
+  //   if (res) {
+  //     dispatch(setOrder(res?.cartItems));
+  //   }
+  // };
+
+  // const { res } = useQuery({
+  //   queryKey: ["cart"],
+  //   queryFn: () => setCart(),
+  //   enabled: isAuth,
+  // });
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">

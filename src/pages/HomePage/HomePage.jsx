@@ -3,12 +3,18 @@ import Brands from "../../components/Brands/Brands";
 import Button from "../../components/Button/Button";
 import ProductCart from "../../components/ProductCart/ProductCart";
 import Slider from "../../components/Slider/Slider";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 import { getAllNewProduct } from "../../services/productServices";
 
+
 const HomePage = () => {
   let isAuth = useSelector((state) => state.user.isAuth);
+  const order = useSelector((state) => state.order);
+  const account = useSelector((state) => state.user.account);
+  const dispatch = useDispatch();
+  
+
 
   const { data } = useQuery({
     queryKey: ["newProduct"],

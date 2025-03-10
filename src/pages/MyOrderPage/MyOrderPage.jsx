@@ -41,8 +41,8 @@ const MyOrderPage = () => {
     mutation.mutate({ id: order._id, orderItems: order?.orderItems });
   };
   return (
-    <div className="lg:h-screen container mx-auto">
-      <div className=" bg-gray-50 lg:h-screen p-4">
+    <div className="container mx-auto">
+      <div className=" bg-gray-50 p-4">
         <div className="w-3/5 mx-auto">
           <h1 className="text-2xl font-medium text-gray-700 mb-6">
             Đơn hàng của tôi
@@ -122,7 +122,14 @@ const MyOrderPage = () => {
                     </div>
 
                     <div className="flex justify-end items-center space-x-3 pt-2">
-                      {item?.status === "pending" && (
+                    {(item?.isPaid === true) && (
+                        <button
+                          className="px-4 py-2 text-xl font-semibold rounded-md text-gray-600 hover:bg-gray-50 transition-colors"
+                        >
+                          Đã thanh toán
+                        </button>
+                      )}
+                      {(item?.status === "pending" && item?.isPaid === false) && (
                         <button
                           className="px-4 py-2 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-50 transition-colors"
                           onClick={() => handleCancel(item)}

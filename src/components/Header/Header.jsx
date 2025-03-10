@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { data, Link, useNavigate } from "react-router-dom";
 import { FiShoppingCart, FiSearch } from "react-icons/fi";
 import { FaRegUserCircle, FaRegHeart } from "react-icons/fa";
 import Container from "../Container/Container";
@@ -10,6 +10,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../redux/slices/userSlice";
 import { toast } from "react-toastify";
 import { logoutUser } from "../../services/userServices";
+import { removeAll } from "../../redux/slices/orderSlice";
+import { updateCart } from "../../services/cartServices";
+import { useMutationHook } from "../../hooks/useMutationHook";
 
 const Header = () => {
   let isLogin = useSelector((state) => state.user.isAuth);
@@ -17,6 +20,23 @@ const Header = () => {
   let order = useSelector((state) => state.order);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const mutationUpdateCart = useMutationHook(
+    ({ id, data }) => updateCart(id, data),
+    {}
+  );
+
+  // console.log("newOrder", order?.orderItems);
+  const handleLogout = async () => {
+    dispatch(logout());
+    mutationUpdateCart.mutate({ id: account.id, data: order?.orderItems });
+    dispatch(removeAll());
+    localStorage.removeItem("access_token");
+    let data = await logoutUser();
+    if (data) {
+      toast.success(data.EM);
+    }
+  };
 
   return (
     <header className="border-b sticky top-0 bg-white z-10">
@@ -104,14 +124,7 @@ const Header = () => {
                     as={Link}
                     to="/sign-in"
                     className="text-xl px-7 py-2"
-                    onClick={async () => {
-                      dispatch(logout());
-                      localStorage.removeItem("access_token");
-                      let data = await logoutUser();
-                      if (data) {
-                        toast.success(data.EM);
-                      }
-                    }}
+                    onClick={handleLogout}
                   >
                     Đăng xuất
                   </Dropdown.Item>

@@ -6,6 +6,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { addOrderProduct } from "../../redux/slices/orderSlice";
+import { CiStar } from "react-icons/ci";
+import { FaStar } from "react-icons/fa";
 const ProductDetailPage = () => {
   const location = useLocation();
   const product = location.state;
@@ -42,15 +44,23 @@ const ProductDetailPage = () => {
     let stars = [];
     let remain = 5 - number;
     for (let i = 0; i < number; i++) {
-      stars.push(<span key={i}>⭐</span>);
+      stars.push(
+        <span key={i}>
+          <FaStar className="size-5 text-yellow-300" />
+        </span>
+      );
     }
     for (let i = 0; i < remain; i++) {
-      stars.push(<span key={i}>⭐</span>);
+      stars.push(
+        <span key={i}>
+          <CiStar className="size-6" />
+        </span>
+      );
     }
     return stars;
   };
   return (
-    <div className="mb-16">
+    <div className="mb-16 xl:h-screen">
       <div className="container mx-auto mt-3">
         <button
           className=" py-1 px-3 flex items-center justify-center"
@@ -86,7 +96,7 @@ const ProductDetailPage = () => {
             </span>
           </h1>
           <div className="flex items-center space-x-2">
-            <span className="text-yellow-500 text-xl">
+            <span className="text-yellow-500 text-xl flex items-center">
               {renderStart(product?.rating)}
             </span>
             <span className="text-gray-600 text-xl">
@@ -116,6 +126,15 @@ const ProductDetailPage = () => {
               Đổi địa chỉ
             </Link>
           </div>
+          <div
+            className="fb-like"
+            datahref="https://developers.facebook.com/docs/plugins/"
+            datawidth=""
+            datalayout=""
+            dataaction=""
+            datasize=""
+            datashare="true"
+          ></div>
           {/* <div>
             <h2 className="font-semibold text-xl">Màu sắc</h2>
             <div className="flex gap-2 mt-2">
